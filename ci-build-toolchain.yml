@@ -1,0 +1,33 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: |
+    mkdir /opt/toolchains/dc
+    mkdir /opt/toolchains/dc/kos
+    cp -r * /opt/toolchains/dc/kos
+    cd /opt/toolchains/dc/kos/utils/dc-chain
+    ./download.sh
+    ./unpack.sh
+    make erase=1
+  displayName: 'Download Extract and build KOS cross compiler'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '/opt/toolchains/dc/kos'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'toolchain'
+    publishLocation: 'Container'

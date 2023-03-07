@@ -11,6 +11,10 @@ pool:
 
 steps:
 - script: |
+    sudo apt-get install libpng-dev libjpeg-dev texinfo 
+  displayName: 'Install prerequisite packages'
+
+- script: |
     mkdir /opt/toolchains
     mkdir /opt/toolchains/dc
     mkdir /opt/toolchains/dc/kos

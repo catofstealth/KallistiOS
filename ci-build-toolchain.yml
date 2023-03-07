@@ -23,7 +23,7 @@ steps:
     cp config.mk.stable.sample config.mk
     ./download.sh
     ./unpack.sh
-    make erase=1
+    make
   displayName: 'Download Extract and build KOS cross compiler'
 
 - task: CopyFiles@2

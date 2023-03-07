@@ -16,6 +16,7 @@ steps:
     mkdir /opt/toolchains/dc/kos
     cp -r * /opt/toolchains/dc/kos
     cd /opt/toolchains/dc/kos/utils/dc-chain
+    cp config.mk.stable.sample config.mk
     ./download.sh
     ./unpack.sh
     make erase=1

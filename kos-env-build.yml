@@ -1,0 +1,51 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- kos-container
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: |
+    sudo apt-get install libpng-dev libjpeg-dev texinfo 
+  displayName: 'Install prerequisite packages (for KOS)'
+
+- script: |
+    mkdir /opt/toolchains
+    mkdir /opt/toolchains/dc
+    mkdir /opt/toolchains/dc/kos
+    cp -r $(Build.SourcedDirectory)/* /opt/toolchains/dc/kos
+    cd /opt/toolchains/dc/kos/utils/dc-chain
+    cp config.mk.stable.sample config.mk
+    ./download.sh
+    ./unpack.sh
+    make
+  displayName: 'Download Extract and build DC-Chain'
+
+- script: |
+    cd /opt/toolchains/dc/kos/
+    make
+  displayName: 'Compile KOS Base'
+  enabled: true
+
+- script: |
+    cd /opt/toolchains/dc/kos-ports/
+    make
+  displayName: 'Compile KOS Ports'
+  enabled: false
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '/opt/toolchains/dc/'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'kos-default-environment'
+    publishLocation: 'Container'

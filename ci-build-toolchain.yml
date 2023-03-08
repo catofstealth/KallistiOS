@@ -12,12 +12,14 @@ pool:
 steps:
 - script: |
     sudo apt-get install libpng-dev libjpeg-dev texinfo 
-  displayName: 'Install prerequisite packages'
+  displayName: 'Install prerequisite packages (for KOS)'
 
 - script: |
     mkdir /opt/toolchains
     mkdir /opt/toolchains/dc
     mkdir /opt/toolchains/dc/kos
+    mkdir $(Build.ArtifactStagingDirectory)/sh-elf
+    mkdir $(Build.ArtifactStagingDirectory)/arm-eabi
     cp -r * /opt/toolchains/dc/kos
     cd /opt/toolchains/dc/kos/utils/dc-chain
     cp config.mk.stable.sample config.mk
@@ -30,13 +32,13 @@ steps:
   inputs:
     SourceFolder: '/opt/toolchains/dc/sh-elf'
     Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/sh-elf'
 
 - task: CopyFiles@2
   inputs:
     SourceFolder: '/opt/toolchains/dc/arm-eabi'
     Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/arm-eabi'
 
 - task: PublishBuildArtifacts@1
   inputs:

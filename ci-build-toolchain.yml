@@ -28,7 +28,13 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '/opt/toolchains/dc'
+    SourceFolder: '/opt/toolchains/dc/sh-elf'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '/opt/toolchains/dc/arm-eabi'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 

@@ -28,7 +28,7 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '/opt/toolchains/dc/kos'
+    SourceFolder: '/opt/toolchains/dc'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
